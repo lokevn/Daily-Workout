@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blur">#E2EAD9</color>
+    <color name="primary_color">#FF4D4C7D</color>
+    <color name="accent_color">#FFA7D397</color>
+    <color name="secondary_color">#FFFAE7C9</color>
+    <color name="toolbar_color_control_normal">#CD41E2</color>
 </resources>
