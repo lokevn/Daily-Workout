@@ -2,11 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape
-            android:innerRadiusRatio="2.7"
+            android:innerRadiusRatio="2.6"
             android:shape="ring"
-            android:thicknessRatio="30.0"
+            android:thicknessRatio="40.0"
             android:useLevel="true">
-            <solid android:color="@color/accent_color"/>
+            <solid android:color="#5AA140"/>
         </shape>
 
     </item>
