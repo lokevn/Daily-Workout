@@ -68,4 +68,44 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/exerciseViewFL"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exerciseTB"
+        android:background="@drawable/item_circular_accent_border"
+        android:visibility="invisible"
+        tools:visibility="visible">
+        <ProgressBar
+            android:id="@+id/exersiseViewPB"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_gravity="center"
+            android:max="30"
+            android:progress="7"
+            android:rotation="-90"
+            android:background="@drawable/circular_progress_gray"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:indeterminate="false"/>
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/item_circular_color_accent_background">
+            <TextView
+                android:id="@+id/timerViewTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:text="30"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
