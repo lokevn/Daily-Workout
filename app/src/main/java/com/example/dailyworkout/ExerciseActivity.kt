@@ -15,6 +15,9 @@ class ExerciseActivity : AppCompatActivity() {
     private var exerciseDuration: Long = 10000
     private var pauseExerciseOffset: Long = 0
     private val countInterval: Long = 1000
+
+    private var exerciseList: ArrayList<ExerciseModel>? = null
+    private var currentExercise: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exerciseBinding = ActivityExerciseBinding.inflate(layoutInflater)
@@ -30,6 +33,7 @@ class ExerciseActivity : AppCompatActivity() {
 
         setupProgressBar()
 
+        exerciseList = Constant.defaultExerciseList()
     }
 
     override fun onDestroy() {
@@ -59,6 +63,8 @@ class ExerciseActivity : AppCompatActivity() {
                 exerciseBinding?.exersisePB?.progress = ((timerDuration-pauseOffset)/1000).toInt()
                 exerciseBinding?.timerTV?.text = ((timerDuration-pauseOffset)/1000).toString()
                 setupExerciseView()
+
+                currentExercise++
             }
         }.start()
     }
