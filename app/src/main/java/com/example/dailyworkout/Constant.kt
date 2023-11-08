@@ -1,6 +1,9 @@
 package com.example.dailyworkout
 
 object Constant {
+
+    val REST_TIME:Long = 3000
+    val EXERCISE_TIME:Long = 5000
     fun defaultExerciseList() : ArrayList<ExerciseModel> {
         val exerciseList = ArrayList<ExerciseModel>()
         exerciseList.add(ExerciseModel(
@@ -45,6 +48,7 @@ object Constant {
             R.drawable.ic_squat,
             false,
             false))
+        /*
         exerciseList.add(ExerciseModel(
             8,
             "Plank",
@@ -75,6 +79,7 @@ object Constant {
             R.drawable.ic_high_knees_running_in_place,
             false,
             false))
+         */
         return exerciseList
     }
 }

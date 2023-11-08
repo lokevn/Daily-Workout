@@ -5,8 +5,9 @@ class ExerciseModel (
     private var name: String,
     private var image: Int,
     private var isCompleted: Boolean,
-    private var isSelected: Boolean
+    private var isSelected: Boolean,
 ) {
+    private var duration:Long = Constant.EXERCISE_TIME
     fun getId() : Int {
         return  id
     }
@@ -47,4 +48,11 @@ class ExerciseModel (
         this.isSelected = isSelected
     }
 
+    fun getDuration():Long {
+        return duration
+    }
+
+    fun setDuration(duration:Long) {
+        this.duration = duration
+    }
 }

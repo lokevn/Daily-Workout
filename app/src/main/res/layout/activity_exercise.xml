@@ -21,9 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/accent_color"
-        android:textSize="@dimen/button_text_size"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:text="GET READY FOR"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/exerciseFL"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -68,6 +69,59 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/upcomingTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_color"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:text="UPCOMING EXERCISE"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@id/upcomingNameTV"
+        app:layout_constraintTop_toBottomOf="@id/exerciseFL"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/upcomingNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_color"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:text="EXCERCISE 1"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/upcomingTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/exerciseIV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        tools:src="@drawable/ic_abdominal_crunch"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/exerciseTB"
+        app:layout_constraintBottom_toTopOf="@id/exerciseNameTV"/>
+
+    <TextView
+        android:id="@+id/exerciseNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EXERCISE 1"
+        android:textColor="@color/accent_color"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exerciseIV"
+        app:layout_constraintBottom_toTopOf="@id/exerciseViewFL"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
     <FrameLayout
         android:id="@+id/exerciseViewFL"
         android:layout_width="150dp"
@@ -75,7 +129,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/exerciseTB"
+        app:layout_constraintTop_toBottomOf="@id/exerciseNameTV"
         android:background="@drawable/item_circular_accent_border"
         android:visibility="invisible"
         tools:visibility="visible">
