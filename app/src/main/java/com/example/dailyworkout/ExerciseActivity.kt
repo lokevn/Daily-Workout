@@ -1,12 +1,18 @@
 package com.example.dailyworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.dailyworkout.databinding.ActivityExerciseBinding
+import java.lang.Exception
+import java.util.Locale
+
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var exerciseBinding:ActivityExerciseBinding? = null
     private var countDownTimer: CountDownTimer? = null
@@ -21,8 +27,23 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercise: Int = -1
 
     private var tts: TextToSpeech? = null
+    private var isTTSInitialized:Boolean = false
+
+    private var player: MediaPlayer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        tts = TextToSpeech(this, this)
+        try {
+            val soundURI = Uri.parse(
+                "android.resource://com.example.dailyworkout/"
+                        + R.raw.press_start)
+            player = MediaPlayer.create(this, soundURI)
+            player?.isLooping = false
+        } catch (e: Exception) {
+            Log.e("sound", "erro to parse sound resource ${e.printStackTrace()}")
+        }
+
+
         exerciseBinding = ActivityExerciseBinding.inflate(layoutInflater)
         setContentView(exerciseBinding?.root)
         //setContentView(R.layout.activity_exercise)
@@ -35,19 +56,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         exerciseList = Constant.defaultExerciseList()
         setupProgressBar()
-
-        tts = TextToSpeech(this, this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        exerciseBinding = null
-        if (countDownTimer != null) {
-            countDownTimer?.cancel()
-        }
-        if (exerciseTimer != null) {
-            exerciseTimer?.cancel()
-        }
     }
 
     private fun setProgressBar() {
@@ -57,8 +65,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         countDownTimer = object: CountDownTimer(timerDuration, countInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 pauseOffset = timerDuration - millisUntilFinished
-                exerciseBinding?.exersisePB?.progress = (millisUntilFinished/1000+1).toInt()
-                exerciseBinding?.timerTV?.text = (millisUntilFinished/1000+1).toString()
+                val remainTimeInSecond = millisUntilFinished/1000+1
+                exerciseBinding?.exersisePB?.progress = (remainTimeInSecond).toInt()
+                exerciseBinding?.timerTV?.text = (remainTimeInSecond).toString()
+                //speakOut(remainTimeInSecond.toString())
             }
 
             override fun onFinish() {
@@ -85,14 +95,18 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         currentExercise++
         if (currentExercise<exerciseList!!.size) {
-            exerciseBinding?.upcomingNameTV?.text =
-                exerciseList!![currentExercise].getName()
+            val nextExerciseName = exerciseList!![currentExercise].getName()
+            exerciseBinding?.upcomingNameTV?.text = nextExerciseName
+
+            speakOut("Get ready for exercise $nextExerciseName")
             setProgressBar()
         }else {
             exerciseBinding?.exerciseTV?.text = "Well Done!"
             exerciseBinding?.upcomingTV?.text = "Congratulation!"
             exerciseBinding?.upcomingNameTV?.text = " You have finished all the exercises!!"
+            speakOut("Congratulation! You have finished all the exercises!")
         }
+        player?.start()
 
     }
 
@@ -103,16 +117,18 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         exerciseTimer = object: CountDownTimer(exerciseDuration, countInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 pauseExerciseOffset = exerciseDuration - millisUntilFinished
-                exerciseBinding?.exersiseViewPB?.progress = (millisUntilFinished/1000+1).toInt()
-                exerciseBinding?.timerViewTV?.text = (millisUntilFinished/1000+1).toString()
+                val remainTimeInSecond = millisUntilFinished/1000+1
+                exerciseBinding?.exersiseViewPB?.progress = (remainTimeInSecond).toInt()
+                exerciseBinding?.timerViewTV?.text = (remainTimeInSecond).toString()
+                speakOut(remainTimeInSecond.toString())
             }
 
             override fun onFinish() {
                 pauseExerciseOffset += countInterval
                 exerciseBinding?.exersiseViewPB?.progress = ((exerciseDuration-pauseExerciseOffset)/1000).toInt()
                 exerciseBinding?.timerViewTV?.text = ((exerciseDuration-pauseExerciseOffset)/1000).toString()
+                speakOut("Well Done")
                 setupProgressBar()
-
             }
         }.start()
     }
@@ -159,6 +175,54 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
-        //TODO("Not yet implemented")
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts?.setLanguage(Locale.UK)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(this,
+                    "UK Language not supported",
+                    Toast.LENGTH_SHORT).show()
+            } else {
+                isTTSInitialized = true
+            }
+        } else {
+            Toast.makeText(this,
+                "Fail to initiate Text to Speech",
+                Toast.LENGTH_SHORT).show()
+        }
     }
+
+    private fun speakOut(text:String) {
+        if (tts != null) {
+            if (isTTSInitialized) {
+                tts!!.speak(text, TextToSpeech.QUEUE_ADD, null, "")
+            } else {
+                Toast.makeText(this,
+                    "TTS not ready for $text, ",
+                    Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this,
+                "Text to Speech was not initialized successfully",
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exerciseBinding = null
+        if (countDownTimer != null) {
+            countDownTimer?.cancel()
+        }
+        if (exerciseTimer != null) {
+            exerciseTimer?.cancel()
+        }
+        if (tts != null) {
+            tts?.stop()
+            tts?.shutdown()
+        }
+        if (player!=null) {
+            player?.stop()
+        }
+    }
+
 }
