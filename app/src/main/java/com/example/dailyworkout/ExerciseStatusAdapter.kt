@@ -19,7 +19,7 @@ class ExerciseStatusAdapter(val items:ArrayList<ExerciseModel>):
     }
 
     override fun getItemCount(): Int {
-
+        return items.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
